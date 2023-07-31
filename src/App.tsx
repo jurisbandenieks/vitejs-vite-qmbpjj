@@ -1,35 +1,92 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  ClickData,
+  EventManager,
+  MonthYear,
+  Page,
+  Resource,
+} from '@event-manager/react';
+import { resources } from './assets/data';
+import { TablePagination, TextField } from '@mui/material';
+import { useMemo, useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [page, setPage] = useState<Page>({
+    current: 0,
+    size: 10,
+    count: Math.ceil(resources.length / 10),
+    total: resources.length,
+  });
+  const [data, setData] = useState<Resource[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // This can be any async fetch function
+  // This function is triggered my page change
+  useMemo(() => {
+    setLoading(true);
+    setTimeout(() => {
+      const data = resources.slice(
+        page.current * page.size,
+        (page.current + 1) * page.size
+      );
+      setData(data);
+      setLoading(false);
+    }, 500);
+  }, [page]);
+
+  const handleClick = (data: ClickData | undefined) => {
+    console.log(data);
+  };
+
+  const handleUpdateDate = (date: MonthYear) => {
+    console.log(date);
+  };
+
+  const handleSearch = (text: string) => {
+    console.log(text);
+  };
+
+  const handleChangePage = (
+    _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number
+  ) => {
+    setPage({ ...page, current: newPage });
+  };
+  const handleChangeRowsPerPage = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setPage({ ...page, size: Number(e.target.value) });
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <EventManager
+        resources={data}
+        tableId={2}
+        showTooltip
+        showLegend
+        loading={loading}
+        search={
+          <TextField
+            variant="standard"
+            label="Search"
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        }
+        pagination={
+          <TablePagination
+            component="div"
+            count={page.total}
+            page={page.current}
+            onPageChange={handleChangePage}
+            rowsPerPage={page.count}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        }
+        onClick={handleClick}
+        onUpdateDate={handleUpdateDate}
+      />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
