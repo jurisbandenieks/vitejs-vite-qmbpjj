@@ -1,7 +1,14 @@
-import { Event, Resource, addDays } from '@event-manager/react'
+import { Event, Resource } from '@event-manager/react'
 
 const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+const addDays = (date: Date, days: number): Date => {
+  const currentDate = new Date(date)
+  const newDate = new Date(currentDate)
+  newDate.setDate(currentDate.getDate() + days)
+  return newDate
 }
 
 const eventTypeLib = [
