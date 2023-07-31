@@ -1,13 +1,13 @@
+import React, { useMemo, useState } from 'react'
 import {
   ClickData,
   EventManager,
   MonthYear,
   Page,
   Resource,
-} from '@event-manager/react';
-import { resources } from './assets/data';
-import { TablePagination, TextField } from '@mui/material';
-import { useMemo, useState } from 'react';
+} from '@event-manager/react'
+import { resources } from './assets/data'
+import { TablePagination, TextField } from '@mui/material'
 
 function App() {
   const [page, setPage] = useState<Page>({
@@ -15,47 +15,47 @@ function App() {
     size: 10,
     count: Math.ceil(resources.length / 10),
     total: resources.length,
-  });
-  const [data, setData] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(false);
+  })
+  const [data, setData] = useState<Resource[]>([])
+  const [loading, setLoading] = useState(false)
 
   // This can be any async fetch function
   // This function is triggered my page change
   useMemo(() => {
-    setLoading(true);
+    setLoading(true)
     setTimeout(() => {
       const data = resources.slice(
         page.current * page.size,
-        (page.current + 1) * page.size
-      );
-      setData(data);
-      setLoading(false);
-    }, 500);
-  }, [page]);
+        (page.current + 1) * page.size,
+      )
+      setData(data)
+      setLoading(false)
+    }, 500)
+  }, [page])
 
   const handleClick = (data: ClickData | undefined) => {
-    console.log(data);
-  };
+    console.log(data)
+  }
 
   const handleUpdateDate = (date: MonthYear) => {
-    console.log(date);
-  };
+    console.log(date)
+  }
 
   const handleSearch = (text: string) => {
-    console.log(text);
-  };
+    console.log(text)
+  }
 
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
-    newPage: number
+    newPage: number,
   ) => {
-    setPage({ ...page, current: newPage });
-  };
+    setPage({ ...page, current: newPage })
+  }
   const handleChangeRowsPerPage = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setPage({ ...page, size: Number(e.target.value) });
-  };
+    setPage({ ...page, size: Number(e.target.value) })
+  }
 
   return (
     <>
@@ -67,14 +67,14 @@ function App() {
         loading={loading}
         search={
           <TextField
-            variant="standard"
-            label="Search"
+            variant='standard'
+            label='Search'
             onChange={(e) => handleSearch(e.target.value)}
           />
         }
         pagination={
           <TablePagination
-            component="div"
+            component='div'
             count={page.total}
             page={page.current}
             onPageChange={handleChangePage}
@@ -86,7 +86,7 @@ function App() {
         onUpdateDate={handleUpdateDate}
       />
     </>
-  );
+  )
 }
 
-export default App;
+export default App
